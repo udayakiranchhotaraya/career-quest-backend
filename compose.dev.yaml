@@ -1,0 +1,13 @@
+services:
+  app-dev:
+    build:
+      context: .
+      target: development # Use the development stage
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/src/app   # Bind mount the code for live reloading
+      - /usr/src/app/node_modules  # Prevent node_modules being overridden by bind mount
+    env_file:
+      - .env.dev
+    command: npm run dev  # Use the dev script from package.json

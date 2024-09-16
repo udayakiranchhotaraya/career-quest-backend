@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+      target: production # Use the production stage
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    command: npm start  # Use the start script from package.json
