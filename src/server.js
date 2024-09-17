@@ -1,6 +1,6 @@
 const app = require('./app');
 const connectDB = require('./db/db.config');
-const winston = require('winston'); // Optional: for logging
+const logger = require('./utils/logger');
 
 const PORT = process.env.PORT || 3000;
 
@@ -9,12 +9,15 @@ const PORT = process.env.PORT || 3000;
     // Connect to database
     await connectDB();
     app.on('error', (error) => {
-      console.error(`Express app initialisation error: ${error}`);
+      logger.error(`Express app initialisation error: ${error}`);
     });
     // Start the server
-    app.listen(PORT, () => { console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`); });
+    app.listen(PORT, () => { 
+      console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+      logger.info(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+    });
   } catch (error) {
-    console.error(`Connection error: ${error}`);
+    logger.error(`Connection error: ${error}`);
     process.exit(1);
   }
 })()
