@@ -20,14 +20,12 @@ class JWTMiddleware {
             req.user = decoded;
             return next();
         } catch (error) {
-            logger.error(`JWT verification failed: ${error.message}`); // Log the error with stack trace
-
             // Handle specific JWT error cases like token expiration
             if (error.name === 'TokenExpiredError') {
-                return res.status(401).json({ "error": "Unauthorized - Token expired" });
+                return res.status(401).json({ "message": "Unauthorized - Token expired" });
             }
 
-            return res.status(401).json({ "error": "Unauthorized - Invalid token" });
+            return res.status(401).json({ "message": "Unauthorized - Invalid token" });
         }
     }
 

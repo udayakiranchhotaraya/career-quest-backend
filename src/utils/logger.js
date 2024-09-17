@@ -1,6 +1,7 @@
 const { createLogger, format, transports } = require('winston');
 const { combine, timestamp, printf, errors } = format;
 require('winston-daily-rotate-file');
+const stripAnsi = require('strip-ansi');
 
 // Log format for displaying log details in a readable format
 const logFormat = printf(({ level, message, timestamp, stack }) => {
@@ -36,6 +37,14 @@ const logger = createLogger({
     infoTransport    // General logs
   ],
 });
+
+// Morgan stream function to write HTTP request logs using Winston, stripping ANSI color codes
+logger.stream = {
+  write: (message) => {
+    const cleanMessage = stripAnsi(message.trim());
+    logger.info(cleanMessage);
+  },
+};
 
 // If the environment is not production, log to the console as well
 if (process.env.NODE_ENV !== 'production') {
