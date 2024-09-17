@@ -131,7 +131,7 @@ employerSchema.pre('save', async function (next) {
         const  hashedPassword = await bcrypt.hash(company.accessPassword, salt);
 
         company.accessPassword = String(hashedPassword);
-        await company.save();
+        next();
     } catch (error) {
         return next(error);
     }
@@ -146,5 +146,5 @@ employerSchema.methods.comparePassword = async function (candidatePassword) {
     }
 }
 
-const EmployerModel = mongoose.model('Company', employerSchema);
+const EmployerModel = mongoose.model('Employer', employerSchema);
 module.exports = EmployerModel;
