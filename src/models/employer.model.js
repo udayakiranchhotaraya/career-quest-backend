@@ -99,7 +99,7 @@ const employerSchema = new mongoose.Schema({
     imageURLs : [{
         type: String
     }],
-    companyLogo : {
+    companyLogoURL : {
         type: String
     },
     benefits : {

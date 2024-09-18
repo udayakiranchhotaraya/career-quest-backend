@@ -4,7 +4,8 @@ const { verifyToken } = require('../middlewares/jwt.middleware');
 
 const { 
     registerEmployer,
-    loginEmployer 
+    loginEmployer, 
+    updateEmployerDetails
 } = require('../controllers/employer.controller');
 
 const EmployerRouter = express.Router();
@@ -14,5 +15,7 @@ EmployerRouter.post('/register', registerEmployer);
 
 // Route for employer login, calls loginEmployer controller
 EmployerRouter.post('/login', loginEmployer);
+
+EmployerRouter.put('/details/update', verifyToken, updateEmployerDetails);
 
 module.exports = EmployerRouter;
