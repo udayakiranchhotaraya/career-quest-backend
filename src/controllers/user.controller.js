@@ -191,6 +191,32 @@ async function updateEducation(req, res) {
     }
 }
 
+async function deleteEducation(req, res) {
+    try {
+        // Extract the user ID from req.user (set by JWT middleware)
+        const { id } = req.user;
+        
+        // Extract the educationId from request parameters
+        const { educationId } = req.params;
+        
+        // Find the user by ID and update the education field
+        await User.findOneAndUpdate(
+            { _id: id },
+            { 
+                $pull: { 
+                    educations: { _id: educationId } 
+                } 
+            }, // Remove the specific education entry
+            { new: true, runValidators: true } // Returns updated document, validate updates
+        );
+          
+        // Return a success message with the updated user details
+        return res.status(200).json({ "message": "Education entry deleted successfully" });
+    } catch (error) {
+        return res.status(400).json({ "message": error.message });
+    }
+}
+
 module.exports = {
     signupUser,
     signinUser,
@@ -198,5 +224,6 @@ module.exports = {
     viewUserDetails,
     deleteUser,
     addEducation,
-    updateEducation
+    updateEducation,
+    deleteEducation
 }
