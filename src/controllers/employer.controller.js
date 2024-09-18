@@ -115,8 +115,29 @@ async function updateEmployerDetails(req, res) {
     }
 }
 
+async function viewEmployerDetails(req, res) {
+    try {
+        // Extract employer ID from req.user (set by JWT middleware)
+        const { id } = req.user;
+
+        // Find the employer by ID, excluding the password field
+        const employer = await Employer.findOne({ _id: id }, { accessPassword: 0 });
+
+        // If employer not found, return error
+        if (!employer) {
+            return res.status(404).json({ "message": "Employer not found" });
+        }
+
+        // Return employer details
+        return res.status(200).json({ "employer": employer });
+    } catch (error) {
+        return res.status(500).json({ "message": error.message });
+    }
+}
+
 module.exports = { 
     registerEmployer,
     loginEmployer,
-    updateEmployerDetails
+    updateEmployerDetails,
+    viewEmployerDetails
 };
