@@ -159,11 +159,44 @@ async function addEducation(req, res) {
     }
 }
 
+async function updateEducation(req, res) {
+    try {
+        // Extract user ID from req.user (set in JWT middleware)
+        const { id } = req.user;
+
+        // Extract the educationId from request parameters.
+        // This ID is used to locate and update a specific education entry in the user's profile.
+        const { educationId } = req.params;
+
+        // Extract education details from request body
+        const { institution, degree, yearOfCompletion } = req.body;
+
+        // Find the user and update the specific education entry
+        await User.findOneAndUpdate(
+            { _id: id, 'educations._id': educationId },
+            { 
+                $set: {
+                    'educations.$.institution': institution,
+                    'educations.$.degree': degree,
+                    'educations.$.yearOfCompletion': yearOfCompletion
+                }
+            },
+            { new: true, runValidators: true } // Returns updated document, validate updates
+        );
+
+        // Return updated user details
+        return res.status(200).json({ "message": "Education details updated successfully" });
+    } catch (error) {
+        return res.status(400).json({ "message": error.message });
+    }
+}
+
 module.exports = {
     signupUser,
     signinUser,
     updateUserDetails,
     viewUserDetails,
     deleteUser,
-    addEducation
+    addEducation,
+    updateEducation
 }
