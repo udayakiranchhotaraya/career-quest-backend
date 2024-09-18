@@ -22,7 +22,7 @@ UserRouter.post('/signin', signinUser);
 UserRouter.get('/profile', verifyToken, viewUserDetails);
 
 // Route to update user profile details, protected by JWT token, calls updateUserDetails controller
-UserRouter.patch('/profile/update', verifyToken, updateUserDetails);
+UserRouter.put('/profile/update', verifyToken, updateUserDetails);
 
 // Route to delete user profile, protected by JWT token, calls deleteUser controller
 UserRouter.delete('/profile/delete', verifyToken, deleteUser);
