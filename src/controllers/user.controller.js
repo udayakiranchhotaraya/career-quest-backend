@@ -128,10 +128,102 @@ async function deleteUser(req, res) {
     }
 }
 
+async function addEducation(req, res) {
+    try {
+        // Extract user ID from req.user (set by JWT middleware)
+        const { id } = req.user;
+
+        // Extract education details from request body
+        const { institution, degree, yearOfCompletion } = req.body;
+
+        // Find user by ID and update the education field
+        await User.findOneAndUpdate(
+            { _id: id },
+            { 
+                $push : {
+                    educations: {
+                        institution: institution,
+                        degree: degree,
+                        yearOfCompletion: yearOfCompletion
+                    }
+                }
+            }, // Push new education into the education array
+            { new: true, runValidators: true } // Return updated user and run validation on the fields
+        );
+
+        // Send success response with updated user data
+        return res.status(200).json({ "message": "Education added successfully" });
+
+    } catch (error) {
+        return res.status(500).json({ "message": error.message });
+    }
+}
+
+async function updateEducation(req, res) {
+    try {
+        // Extract user ID from req.user (set in JWT middleware)
+        const { id } = req.user;
+
+        // Extract the educationId from request parameters.
+        // This ID is used to locate and update a specific education entry in the user's profile.
+        const { educationId } = req.params;
+
+        // Extract education details from request body
+        const { institution, degree, yearOfCompletion } = req.body;
+
+        // Find the user and update the specific education entry
+        await User.findOneAndUpdate(
+            { _id: id, 'educations._id': educationId },
+            { 
+                $set: {
+                    'educations.$.institution': institution,
+                    'educations.$.degree': degree,
+                    'educations.$.yearOfCompletion': yearOfCompletion
+                }
+            },
+            { new: true, runValidators: true } // Returns updated document, validate updates
+        );
+
+        // Return updated user details
+        return res.status(200).json({ "message": "Education details updated successfully" });
+    } catch (error) {
+        return res.status(400).json({ "message": error.message });
+    }
+}
+
+async function deleteEducation(req, res) {
+    try {
+        // Extract the user ID from req.user (set by JWT middleware)
+        const { id } = req.user;
+        
+        // Extract the educationId from request parameters
+        const { educationId } = req.params;
+        
+        // Find the user by ID and update the education field
+        await User.findOneAndUpdate(
+            { _id: id },
+            { 
+                $pull: { 
+                    educations: { _id: educationId } 
+                } 
+            }, // Remove the specific education entry
+            { new: true, runValidators: true } // Returns updated document, validate updates
+        );
+          
+        // Return a success message with the updated user details
+        return res.status(200).json({ "message": "Education entry deleted successfully" });
+    } catch (error) {
+        return res.status(400).json({ "message": error.message });
+    }
+}
+
 module.exports = {
     signupUser,
     signinUser,
     updateUserDetails,
     viewUserDetails,
-    deleteUser
+    deleteUser,
+    addEducation,
+    updateEducation,
+    deleteEducation
 }

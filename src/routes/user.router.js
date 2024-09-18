@@ -7,7 +7,10 @@ const {
     signinUser,
     updateUserDetails,
     viewUserDetails,
-    deleteUser
+    deleteUser,
+    addEducation,
+    updateEducation,
+    deleteEducation
 } = require('../controllers/user.controller');
 
 const UserRouter = express.Router();
@@ -26,5 +29,14 @@ UserRouter.put('/profile/update', verifyToken, updateUserDetails);
 
 // Route to delete user profile, protected by JWT token, calls deleteUser controller
 UserRouter.delete('/profile/delete', verifyToken, deleteUser);
+
+// Route to add education to user profile, protected by JWT token, calls addEducation controller
+UserRouter.post('/profile/education/add', verifyToken, addEducation);
+
+// Route to update specific education entry in user profile, protected by JWT token, calls updateEducation controller
+UserRouter.put('/profile/education/:educationId/update', verifyToken, updateEducation);
+
+// Route to delete specific education entry from user profile, protected by JWT token, calls deleteEducation controller
+UserRouter.delete('/profile/education/:educationId/delete', verifyToken, deleteEducation);
 
 module.exports = UserRouter;
