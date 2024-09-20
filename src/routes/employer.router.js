@@ -1,6 +1,7 @@
 const express = require('express');
 
 const { verifyToken } = require('../middlewares/jwt.middleware');
+const checkEmployer = require('../middlewares/checkEmployer.middleware');
 
 const { 
     registerEmployer,
@@ -10,7 +11,6 @@ const {
 } = require('../controllers/employer.controller');
 
 const JobRouter = require('./job.routes/job.employer.router');
-const checkEmployer = require('../middlewares/checkEmployer.middleware');
 
 const EmployerRouter = express.Router();
 
